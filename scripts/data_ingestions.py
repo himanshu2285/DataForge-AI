@@ -15,10 +15,10 @@ class DataIngestion:
         file_path = os.path.join(DATA_DIR, file_name)
         try:
             df = pd.read_csv(file_path)
-            print(f"CSV Loaded Successfully: {file_path}")
+            print(f"✅ CSV Loaded Successfully: {file_path}")
             return df
         except Exception as e:
-            print(f"Error loading CSV file {file_name}: {e}")
+            print(f"❌ Error loading CSV file {file_name}: {e}")
             return None
         
     def load_excel(self, file_name, sheet_name=0):
@@ -26,31 +26,31 @@ class DataIngestion:
         file_path = os.path.join(DATA_DIR, file_name)
         try:
             df = pd.read_excel(file_path, sheet_name=sheet_name)
-            print(f"Excel Loaded Successfully: {file_path}")
+            print(f"✅ Excel Loaded Successfully: {file_path}")
             return df
         except Exception as e:
-            print(f"Error loading Excel file {file_name}: {e}")
+            print(f"❌ Error loading Excel file {file_name}: {e}")
             return None
         
     def connect_database(self, db_url):
         """Establishes a database connection."""
         try:
             self.engine = create_engine(db_url)
-            print("Database connection established.")
+            print("✅ Database connection established.")
         except Exception as e:
-            print(f"Error connecting to database: {e}")
+            print(f"❌ Error connecting to database: {e}")
         
     def load_data_from_db(self, query):
         """Fetches data from a database using a SQL query."""
         if not self.engine:
-            print("No Database connection. Call connect_database() first.")
+            print("❌ No Database connection. Call connect_database() first.")
             return None
         try: 
             df = pd.read_sql(query, self.engine)
-            print("Data fetched from database successfully.")
+            print("✅ Data fetched from database successfully.")
             return df
         except Exception as e:
-            print(f"Error fetching data from database: {e}")
+            print(f"❌ Error fetching data from database: {e}")
             return None
     
     def fetch_from_api(self, api_url, params=None):
@@ -60,11 +60,11 @@ class DataIngestion:
             if response.status_code == 200:
                 data = response.json()
                 df = pd.DataFrame(data)
-                print("Data fetched from API successfully.")
+                print("✅ Data fetched from API successfully.")
                 return df
             else:
-                print(f"API request failed: {response.status_code}")
+                print(f"❌ API request failed: {response.status_code}")
                 return None
         except Exception as e:
-            print(f"Error fetching data from API: {e}")
+            print(f"❌ Error fetching data from API: {e}")
             return None
