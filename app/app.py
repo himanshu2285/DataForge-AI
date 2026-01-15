@@ -64,4 +64,63 @@ if data_source == "CSV/Excel":
             else:
                 st.error(f"❌ Failed to clean data.")
 
+# Handling Database Query Input
+elif data_source == "Database Query":
+    st.subheader("🗄️ Database Query Input")
+    db_url = st.text_input("Database Connection URL: ", "postgresql://user:password@localhost:5432/db")
+    query = st.text_area("Enter SQL Query:", "SELECT * FROM your_table;")
+    
+    if st.button("🚀 Fetch & Clean Data"):
+        response = requests.post(f"{BACKEND_URL}/clean-db", json={"db_url": db_url, "query": query})
+
+        if response.status_code == 200:
+            st.subheader("🔵 Raw API Response (Debugging)")
+            st.json(response.json()) # debugging: check actual response format 
+            
+            try:
+                cleaned_data_raw = response.json()["cleaned_data"]
+                if isinstance(cleaned_data_raw, str):
+                    cleaned_data = pd.DataFrame(json.loads(cleaned_data_raw)) # convert string json to dict
+                else:
+                    cleaned_data = pd.DataFrame(cleaned_data_raw)
                 
+                st.subheader("✅ Cleaned Data:")
+                st.dataframe(cleaned_data)
+            except Exception as e:
+                st.error("❌ Error converting response to dataframe.")
+        else:
+            st.error(f"❌ Failed to fetch and clean data from database.")   
+    
+
+# Handling API Data
+elif data_source == "API Data":
+    st.subheader("🌐 API Endpoint Input")
+    api_url = st.text_input("Enter API Endpoint:", "https://jsonplaceholder.typicode.com/posts")
+    
+    if st.button("🚀 Fetch & Clean Data"):
+        response = requests.post(f"{BACKEND_URL}/clean-api", json={"api_url": api_url})
+
+        if response.status_code == 200:
+            st.subheader("🔵 Raw API Response (Debugging)")
+            st.json(response.json()) # debugging: check actual response format 
+            
+            try:
+                cleaned_data_raw = response.json()["cleaned_data"]
+                if isinstance(cleaned_data_raw, str):
+                    cleaned_data = pd.DataFrame(json.loads(cleaned_data_raw)) # convert string json to dict
+                else:
+                    cleaned_data = pd.DataFrame(cleaned_data_raw)
+                
+                st.subheader("✅ Cleaned Data:")
+                st.dataframe(cleaned_data)
+            except Exception as e:
+                st.error("❌ Error converting response to dataframe.")
+        else:
+            st.error(f"❌ Failed to fetch and clean data from API.")
+            
+
+# ------------------ Footer ------------------
+st.markdown("""
+            --- 
+            🚀 Built with ** Streamlit + FastAPI + AI** for automated data cleaning.
+            """)
