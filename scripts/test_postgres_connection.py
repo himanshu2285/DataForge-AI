@@ -6,7 +6,7 @@ DB_PORT = "5432"
 DB_NAME = "demodb"
 DB_USER = "postgres"
 DB_PASSWORD = "Admin"
-#DB_URL = "postgresq1://postgres:admin@localhost:5432/demodb"
+#DB_URL = "postgresql://postgres:admin@localhost:5432/demodb"
 
 try:
     # Connect to the PostgreSQL database
